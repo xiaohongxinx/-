@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.bw.mapper.MovieDao">
+      <select id="queryMovie" resultType="com.bw.entity.Movie" parameterType="map">
+        select * from movie
+        <where>
+        <if test="mname!=null and manme!=''"> and mname like concat(("%",#{mname},"%"))</if>
+        <if test="pname!=null and pname!=''">and pname like concat("%",${pname},"%")</if>
+        <if test="mtime!=null and mtime!=''"> and mtime =#{mtime}</if>
+        <if test="startdate!=null and startdate!=''"> and startdate >=#{startdate}</if>
+        <if test="enddate!=null and enddate!=''"> and enddate &lt;=#{enddate}</if>
+        <if test="startmprice!=null and startmprice!=''"> and mprice >=#{startmprice}</if>
+        <if test="endprice!=null and endprice!=''"> and mprice &lt;=#{endprice}</if>
+         <if test="smlong!=null and smlong!=''"> and smlong >=#{smlong}</if>
+        <if test="emlong!=null and emlong!=''"> and emlong &lt;=#{emlong}</if>
+        </where>
+        order by
+        <if test="by==0">asc</if>
+        <if test="by==1">desc</if>
+      </select>
+      <!-- 删除 -->
+      <delete id="delete" parameterType="int">
+         delete from movie where id=#{0}
+      </delete>
+      
+      <!--  批量删除-->
+      <delete id="deleteAll" parameterType="string">
+         delete from movie where id in 
+         <foreach collection="array" item="id" open="(" close=")">
+              #{id}
+         </foreach>
+      </delete>
+      <!-- 根据id进行查询 -->
+      <select id="queryById" parameterType="int" resultType="com.bw.entity.Movie">
+          select * from movie where id=${0}
+      </select>
+      <!-- 修改状态 -->
+      <update id="updateStaus" parameterType="map">
+           update movie set status=#{status} where id=#{id}
+      </update>
+  </mapper>  
